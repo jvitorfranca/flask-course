@@ -59,8 +59,61 @@
 						<th><a href="/ordenacao/salario/{{ordem}}">Salário</a></th>
 					</tr>
 				</thead>
+				<tbody>
+					{% for pessoa in pessoas %}
+						<tr>
+							<td nowrap="true">
+								<a href="/selecao/{{pessoa.id}}">{{pessoa.id}}</a>
+							</td>
+							<td nowrap="true">{{pessoa.nome}}</td>
+							<td nowrap="true">{{pessoa.idade}}</td>
+							<td nowrap="true">{{pessoa.sexo}}</td>
+							<td nowrap="true">{{pessoa.salario}}</td>
+							<td>
+								<a href="/edicao/{{pessoa.id}}"
+								class="btn btn-primary" role="button">
+									Editar
+								</a>
+								<a href="/delecao/{{pessoa.id}}"
+								class="btn btn-danger" role="button">
+									Deletar
+								</a>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
 			</table>
 		</div>
+		<a href="#" style="float: right;" onclick="relatorio()">Imprimir Relatório</a>
+		<textarea name="" id="dados" style="display: none;" cols="30" rows="10">
+			{% for pessoa in pessoas %}
+				{{pessoa.nome}}|{{pessoa.idade}}|{{pessoa.sexo}}|{{pessoa.salario}}#
+			{% endfor %}
+		</textarea>
+		<script>
+			function relatorio(){
+				const doc = new jsPDF({orientation: 'landscape'});
+
+				const texto = document.getElementById('dados').innerText;
+				const arrLinhas = texto.split('#');
+				let conteudo = 'RELATORIO DE PESSOAS \n\n';
+				for (let linha=0; linha<arrLinhas.lenght; linha++) {
+					let arrColunas = arrLinhas[linha].split('|');
+					arrColunas[0] = arrColunas[0].trim().padEnd(35, '*');
+					if (arrColunas[0].indexOf('*') > 0) {
+						conteudo += `NOME: ${arrColunas[0]} - ` +
+									`IDADE: ${arrColunas[1]} - ` +
+									`SEXO: ${arrColunas[2]} - ` +
+									`SALÁRIO: ${arrColunas[3]}\n`;
+					}
+				}
+
+				doc.setFontSize(12);
+				doc.setFont('Courier');
+				doc.text(conteudo, 30, 30);
+				doc.save('relatorio.pdf');
+			}
+		</script>
 	</div>
 </body>
 </html>
