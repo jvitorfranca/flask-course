@@ -85,33 +85,33 @@
 			</table>
 		</div>
 		<a href="#" style="float: right;" onclick="relatorio()">Imprimir Relatório</a>
-		<textarea name="" id="dados" style="display: none;" cols="30" rows="10">
+		<textarea id="dados" style="display: none;">
 			{% for pessoa in pessoas %}
 				{{pessoa.nome}}|{{pessoa.idade}}|{{pessoa.sexo}}|{{pessoa.salario}}#
 			{% endfor %}
 		</textarea>
 		<script>
-			function relatorio(){
+			function relatorio() {
 				const doc = new jsPDF({orientation: 'landscape'});
 
 				const texto = document.getElementById('dados').innerText;
 				const arrLinhas = texto.split('#');
-				let conteudo = 'RELATORIO DE PESSOAS \n\n';
-				for (let linha=0; linha<arrLinhas.lenght; linha++) {
+				let conteudo = 'RELATÓRIO DE PESSOAS\n\n';
+				for(let linha=0; linha<arrLinhas.length; linha++) {
 					let arrColunas = arrLinhas[linha].split('|');
 					arrColunas[0] = arrColunas[0].trim().padEnd(35, '*');
-					if (arrColunas[0].indexOf('*') > 0) {
-						conteudo += `NOME: ${arrColunas[0]} - ` +
-									`IDADE: ${arrColunas[1]} - ` +
-									`SEXO: ${arrColunas[2]} - ` +
-									`SALÁRIO: ${arrColunas[3]}\n`;
+					if(arrColunas[0].indexOf('*') > 0) {
+						conteudo += `NOME: ${arrColunas[0]} - `+
+									`IDADE: ${arrColunas[1]} - `+
+									`SEXO: ${arrColunas[2]} - `+
+									`SALÁRIO: R$ ${arrColunas[3]}\n`;
 					}
 				}
 
 				doc.setFontSize(12);
 				doc.setFont('Courier');
 				doc.text(conteudo, 30, 30);
-				doc.save('relatorio.pdf');
+				doc.save('relatorio.pdf');	
 			}
 		</script>
 	</div>
